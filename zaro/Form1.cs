@@ -42,20 +42,6 @@ namespace zaro
             textBox3.Enabled = false;
             pictureBox1.Visible = false;
             button8.Visible = false;
-
-
-
-           
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -74,7 +60,7 @@ namespace zaro
             bool letezik=false;
             ujfelhasznalo = false;
 
-            if (kepszamlalo==3) {
+            if (kepszamlalo==3 && felhJelszava.Length >= 6 || felhJelszava != null) {
                 if (szamlalo > 0)
                 {
                     for (int i = 0; i < szamlalo; i++)
@@ -94,13 +80,12 @@ namespace zaro
 
                     //accountok[szamlalo] = new felhasznalo(textBox2.Text, textBox3.Text);
                     
-
                     textBox2.Clear();
                     textBox3.Clear();
                     felhJelszava = null;
                     button4.Enabled = false;
                     pictureBox1.Enabled = true;
-                    MessageBox.Show("sikeres jelszo regisztralas!");
+                    MessageBox.Show("Sikeres jelszó regisztráció!");
                     textBox2.Enabled = false;
                     textBox3.Enabled = false;
                     //kep indexek
@@ -167,28 +152,6 @@ namespace zaro
             pictureBox1.Visible = false;
             Regisztracio();
             textBox1.AppendText("jelszo:" + accountok[szamlalo - 1].getJelszo().ToString());
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        { 
-        }
-
-        private void Form1_Click(object sender, EventArgs e)
-        {     
-        }
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {    
-        }
-
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
-        private void pictureBox1_MouseHover(object sender, EventArgs e)
-        {
-            
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -279,6 +242,7 @@ namespace zaro
                     button3.Enabled = true;
                 }
                 else { pictureBox1.Enabled = true; }
+                if (kepszamlalo == 3 && felhJelszava == null) { button3.Enabled = false; }
             } else if(meglevofelhasznalo)
             {
                 pictureBox1.Enabled = true;
@@ -293,20 +257,13 @@ namespace zaro
                 {
                     
                     //pictureBox1.Visible = true;
+
                     button4.Enabled = false;
                     button2.Visible = true;
                     button2.Enabled = true;
+                    button8.Visible = false;
                 }
-                else
-                {
-                   
-                }
-            }
-
-
-            
-            
-            
+            }       
         }
 
         public void Reset()
@@ -317,8 +274,18 @@ namespace zaro
                 label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
                 indexSzamlalo = 0;
                 felhJelszava = "";
+                textBox1.Clear();
+                textBox2.Clear();
                 pictureBox1.Enabled = true;
-                button4.Enabled = true;
+                button4.Enabled = false;
+                button3.Visible = false;
+                button2.Visible = false;
+                button6.Enabled = true;
+                button7.Visible = true;
+                button7.Enabled = true;
+                ujfelhasznalo = false;
+                meglevofelhasznalo = false;
+                pictureBox1.Image = null;
             }
         }
 
