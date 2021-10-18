@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Newtonsoft.Json;
+
 namespace zaro
 {
     public partial class Form1 : Form
@@ -24,13 +26,15 @@ namespace zaro
         int lastpicIndex;
         String lastpic;
         Random rand = new Random();
-        String[] files = Directory.GetFiles(@"C:\Users\This dude\source\repos\zaro\zaro\pics");
+        String[] files = Directory.GetFiles(@"pics");
         bool ujfelhasznalo = false;
         bool meglevofelhasznalo;
         int meglevofelhindex;
 
         int indexSzamlalo=0;
         int kepszamlalo = 0;
+
+        String jsonstring;
 
         public Form1()
         {
@@ -73,8 +77,13 @@ namespace zaro
                     }
                 }
                 if (!letezik) {
-                    accountok[szamlalo].addJelszo(felhJelszava);
+                    accountok[szamlalo].jelszo = felhJelszava;
+                    //accountok[szamlalo].addJelszo(felhJelszava);
                     textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
+                    jsonstring = JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
+                    File.AppendAllText("felhasznalok.json", jsonstring);
+                    jsonstring = "";
+                    //textBox1.AppendText(jsonstring);
                     felhJelszava = "";
                     kepszamlalo = 0;
 
@@ -328,6 +337,9 @@ namespace zaro
             if (ujfelhasznalo)
             {
                 accountok[szamlalo] = new felhasznalo(textBox2.Text, textBox3.Text);
+                accountok[szamlalo].felhasznaloNev = textBox2.Text;
+                accountok[szamlalo].email = textBox3.Text;
+                
                 textBox1.AppendText("Most adjon meg egy jelszót a: " + accountok[szamlalo].getNev().ToString() + " felhasználóhoz" + "\r\n");
                 pictureBox1.Visible = true;
                 button8.Visible = false;

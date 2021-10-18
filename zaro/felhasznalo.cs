@@ -8,11 +8,11 @@ namespace zaro
 {
     class felhasznalo
     {
-        private String felhasznaloNev;
-        private String jelszo;
-        private String email;
-        int[] jelszoKepIndexek = new int[3];
-        public int i=0;
+        public String felhasznaloNev;
+        public String jelszo;
+        public String email;
+        public int[] jelszoKepIndexek = new int[3];
+        int i=0;
         
         public felhasznalo(String felhasznaloNev_, String email_)
         {
