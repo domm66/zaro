@@ -19,7 +19,8 @@ namespace zaro
         int mousePosY; //magassag
  
         int szamlalo=0;
-        felhasznalo[] accountok = new felhasznalo[999999];
+        //felhasznalo[] accountok = new felhasznalo[999999];
+        List<felhasznalo> accountok = new List<felhasznalo>();
         String felhJelszava;
         int currentpicIndex;
         String currentpic;
@@ -34,24 +35,24 @@ namespace zaro
         int indexSzamlalo=0;
         int kepszamlalo = 0;
 
+        int osztasMerteke = 40;
+
         String jsonstring;
+        
 
         public Form1()
         {
             InitializeComponent();
-
-            button2.Visible = false;
-            button3.Visible = false;
-            textBox2.Enabled = false;
-            textBox3.Enabled = false;
-            pictureBox1.Visible = false;
-            button8.Visible = false;
+            //var fasz = JsonConvert.DeserializeObject<dynamic>("felhasznalok.json");
+            
+            GombokAlap();
+            
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            mousePosX = (this.PointToClient(MousePosition).X - pictureBox1.Location.X) / 40; //szelesseg eldarabol 20x20 negyszogekre
-            mousePosY = (this.PointToClient(MousePosition).Y - pictureBox1.Location.Y) / 40; //magassag eladarabolva szinten 20x20 negyszogekre
+            mousePosX = (this.PointToClient(MousePosition).X - pictureBox1.Location.X) / osztasMerteke; //szelesseg eldarabol 20x20 negyszogekre
+            mousePosY = (this.PointToClient(MousePosition).Y - pictureBox1.Location.Y) / osztasMerteke; //magassag eladarabolva szinten 20x20 negyszogekre
             textBox1.AppendText("\r\n" + "X: " + mousePosX.ToString() + " Y: " + mousePosY.ToString() + "\r\n");
             felhJelszava += mousePosX.ToString() + mousePosY.ToString();
             textBox1.AppendText(felhJelszava + "\r\n");
@@ -78,31 +79,12 @@ namespace zaro
                 }
                 if (!letezik) {
                     accountok[szamlalo].jelszo = felhJelszava;
-                    //accountok[szamlalo].addJelszo(felhJelszava);
                     textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
                     jsonstring = JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
                     File.AppendAllText("felhasznalok.json", jsonstring);
-                    jsonstring = "";
-                    //textBox1.AppendText(jsonstring);
-                    felhJelszava = "";
-                    kepszamlalo = 0;
-
-                    //accountok[szamlalo] = new felhasznalo(textBox2.Text, textBox3.Text);
-                    
-                    textBox2.Clear();
-                    textBox3.Clear();
-                    felhJelszava = null;
-                    button4.Enabled = false;
-                    pictureBox1.Enabled = true;
+                    GombokAlap();
+                    Reset();
                     MessageBox.Show("Sikeres jelszó regisztráció!");
-                    textBox2.Enabled = false;
-                    textBox3.Enabled = false;
-                    //kep indexek
-                    //for (int i = 0; i < 3; i++)
-                    //{
-                    //   textBox1.AppendText(accountok[szamlalo].getIndex(i).ToString());
-                    //}
-                    
                 } else 
                 {
                     MessageBox.Show("Ilyen felhasználónév már létezik!");
@@ -120,26 +102,15 @@ namespace zaro
             if(accountok[meglevofelhindex].getJelszo() == felhJelszava)
             {
                 MessageBox.Show("Jelszó elfogadva!");
+                Reset();
+                GombokAlap();
             } else
             {
                 MessageBox.Show("Rossz jelszó, próbálja meg újra!");
                 Reset();
+                GombokAlap();
             }
-            meglevofelhasznalo = false;
-            button2.Visible = false;
-            button6.Enabled = true;
-            button8.Visible = false;
-            button7.Visible = true;
-            button4.Enabled = false;
-            textBox2.Clear();
-            textBox3.Clear();
-            textBox2.Enabled = false;
-            textBox3.Enabled = false;
-            felhJelszava = null;
             
-            pictureBox1.Visible = false;
-
-            kepszamlalo = 0;
             label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
         }
 
@@ -160,26 +131,23 @@ namespace zaro
             button4.Enabled = false;
             pictureBox1.Visible = false;
             Regisztracio();
+
             textBox1.AppendText("jelszo:" + accountok[szamlalo - 1].getJelszo().ToString());
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            label2.Text = "X: " + (((this.PointToClient(MousePosition).X - pictureBox1.Location.X)) / 40).ToString(); //X
-            label3.Text = "Y: " + (((this.PointToClient(MousePosition).Y - pictureBox1.Location.Y))/ 40).ToString(); //Y
+            label2.Text = "X: " + (((this.PointToClient(MousePosition).X - pictureBox1.Location.X)) / osztasMerteke).ToString(); //X
+            label3.Text = "Y: " + (((this.PointToClient(MousePosition).Y - pictureBox1.Location.Y))/ osztasMerteke).ToString(); //Y
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             if (textBox2.Text.Length > 0 && textBox3.Text.Length > 0)
             {
-                button2.Enabled = true;
-                //button3.Enabled = true;
                 button8.Enabled = true;
             }
             else {
-                button2.Enabled = false;
-                //button3.Enabled = false;
                 button8.Enabled = false;
             }
         }
@@ -188,14 +156,10 @@ namespace zaro
         {
             if (textBox2.Text.Length > 0 && textBox3.Text.Length > 0)
             {
-                button2.Enabled = true;
-                //button3.Enabled = true;
                 button8.Enabled = true;
             }
             else
             {
-                button2.Enabled = false;
-                //button3.Enabled = false;
                 button8.Enabled = false;
             }
         }
@@ -211,7 +175,6 @@ namespace zaro
                 if (lastpicIndex == currentpicIndex)
                 {
                     var ujszam = rand.Next(files.Length);
-                    //textBox1.AppendText(ujszam.ToString() + "\r\n");
                     currentpicIndex = ujszam;
                     currentpic = files[ujszam];
                     textBox1.AppendText(currentpicIndex.ToString() + "\r\n");
@@ -238,14 +201,13 @@ namespace zaro
                     
                 }
 
-               // felhJelszava += mousePosX.ToString() + mousePosY.ToString();
+                // felhJelszava += mousePosX.ToString() + mousePosY.ToString();
                 //textBox1.AppendText(felhJelszava);
                 
                 label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
                 if (kepszamlalo == 3)
                 {
-                   
-                   // pictureBox1.Visible = true;
+                    //pictureBox1.Visible = true;
                     //pictureBox1.Visible = false;
                     button4.Enabled = false;
                     button3.Enabled = true;
@@ -277,14 +239,14 @@ namespace zaro
 
         public void Reset()
         {
-            if (ujfelhasznalo || meglevofelhasznalo)
-            {
                 kepszamlalo = 0;
                 label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
+                jsonstring = "";
                 indexSzamlalo = 0;
                 felhJelszava = "";
                 textBox1.Clear();
                 textBox2.Clear();
+                textBox3.Clear();
                 pictureBox1.Enabled = true;
                 button4.Enabled = false;
                 button3.Visible = false;
@@ -295,7 +257,6 @@ namespace zaro
                 ujfelhasznalo = false;
                 meglevofelhasznalo = false;
                 pictureBox1.Image = null;
-            }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -305,29 +266,60 @@ namespace zaro
 
         private void button6_Click(object sender, EventArgs e)
         {
-            button3.Visible = true;
+            UjFelhasznalo();
+        }
+
+        public void GombokAlap() 
+        {
+            button6.Visible = true;
+            button7.Visible = true;
             button2.Visible = false;
-            button6.Enabled = false;
+            button3.Visible = false;
+            button4.Visible = false;
+            button5.Visible = false;
+            textBox2.Enabled = false;
+            textBox3.Enabled = false;
+            pictureBox1.Visible = false;
+            button8.Visible = false;
+        }
+
+        public void UjFelhasznalo()
+        {
+            button3.Visible = true;
+            button3.Enabled = false;
+            button4.Visible = true;
+            button5.Visible = true;
             button7.Visible = false;
+            button6.Visible = false;
+            button8.Visible = true;
             textBox2.Enabled = true;
             textBox3.Enabled = true;
-            button8.Visible = true;
 
             ujfelhasznalo = true;
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        public void Meglevofelhasznalo()
         {
             button7.Visible = false;
+            button7.Enabled = false;
             button8.Visible = true;
-            button6.Enabled = false;
+            button6.Visible = false;
+            button4.Visible = true;
             button3.Visible = false;
-            button2.Visible = false;
+            button2.Visible = true;
+            button2.Enabled = false;
+            button8.Visible = true;
+            button5.Visible = true;
             textBox2.Enabled = true;
             textBox3.Enabled = true;
 
             pictureBox1.Visible = false;
             meglevofelhasznalo = true;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Meglevofelhasznalo();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -336,9 +328,16 @@ namespace zaro
 
             if (ujfelhasznalo)
             {
-                accountok[szamlalo] = new felhasznalo(textBox2.Text, textBox3.Text);
-                accountok[szamlalo].felhasznaloNev = textBox2.Text;
-                accountok[szamlalo].email = textBox3.Text;
+                //accountok[szamlalo] = new felhasznalo();
+
+                accountok.Add(new felhasznalo
+                {
+                  felhasznaloNev = textBox2.Text,
+                  email = textBox3.Text,
+                });
+
+                //accountok[szamlalo].felhasznaloNev = textBox2.Text;
+                //accountok[szamlalo].email = textBox3.Text;
                 
                 textBox1.AppendText("Most adjon meg egy jelszót a: " + accountok[szamlalo].getNev().ToString() + " felhasználóhoz" + "\r\n");
                 pictureBox1.Visible = true;
@@ -359,7 +358,10 @@ namespace zaro
                 lastpic = currentpic;
                 lastpicIndex = currentpicIndex;
 
-            } else if(meglevofelhasznalo)
+                button3.Enabled = false;
+
+            } 
+            else if(meglevofelhasznalo)
             {
                 pictureBox1.Visible = true;
                 for (int i = 0; i < szamlalo; i++)
@@ -376,21 +378,21 @@ namespace zaro
                         //felhJelszava = null;
                         button4.Enabled = true;
                         pictureBox1.Enabled = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Nem létezik ilyen felhasználó!");
-                        textBox2.Clear();
-                        textBox3.Clear();
-                        //felhJelszava = null;
-                        button4.Enabled = true;
-                        pictureBox1.Visible = false;
+                        break;
                     }
                 }
                 //kepszamlalo = 0;
                 label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
             }
             
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            var path = @"C:\Users\This dude\source\repos\zaro\zaro\felhasznalok.json";
+            string elolvasott = File.ReadAllText(path);
+            felhasznalo fasz2 = JsonConvert.DeserializeObject<felhasznalo>(elolvasott);
+            textBox1.Text = fasz2.jelszoKepIndexek[1].ToString();
         }
     }
 }

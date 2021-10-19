@@ -8,17 +8,15 @@ namespace zaro
 {
     class felhasznalo
     {
-        public String felhasznaloNev;
-        public String jelszo;
-        public String email;
-        public int[] jelszoKepIndexek = new int[3];
-        int i=0;
+
         
-        public felhasznalo(String felhasznaloNev_, String email_)
-        {
-            this.felhasznaloNev = felhasznaloNev_;
-            this.email = email_;
-        }
+        public string felhasznaloNev { get; set; }
+        public string jelszo { get; set; }
+        public string email { get; set; }
+
+        public int[] jelszoKepIndexek = new int[3];
+
+        int i=0;
 
         public void addJelszo(String jelszo_)
         {
