@@ -39,7 +39,9 @@ namespace zaro
         int osztasMerteke = 40;
 
         String jsonstring;
-        
+        Rootobject[] deserializalt;
+
+
 
         public Form1()
         {
@@ -103,12 +105,12 @@ namespace zaro
             {
                 MessageBox.Show("Adj meg egy megfelelő hosszúságú jelszót először!");
             }
-
+            Deserialize();
             label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
         }
 
         public void Jelszomegadas() {
-            if(accountok[meglevofelhindex].getJelszo() == felhJelszava)
+            if(deserializalt[meglevofelhindex].jelszo == felhJelszava)
             {
                 MessageBox.Show("Jelszó elfogadva!");
                 Reset();
@@ -121,6 +123,14 @@ namespace zaro
             }
             
             label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
+        }
+
+        public void Deserialize()
+        {
+            var path = @"felhasznalok.json";
+            string elolvasott = "[" + File.ReadAllText(path) + "]";
+            deserializalt = JsonConvert.DeserializeObject<Rootobject[]>(elolvasott);
+            
         }
 
 
@@ -141,7 +151,7 @@ namespace zaro
             pictureBox1.Visible = false;
             Regisztracio();
 
-            textBox1.AppendText("jelszo:" + accountok[szamlalo - 1].getJelszo().ToString());
+            //textBox1.AppendText("jelszo:" + accountok[szamlalo - 1].getJelszo().ToString());
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -383,7 +393,7 @@ namespace zaro
                 pictureBox1.Visible = true;
                 for (int i = 0; i < szamlalo; i++)
                 {
-                    if (accountok[i].getNev() == textBox2.Text && accountok[i].getEmail() == textBox3.Text)
+                    if (deserializalt[i].felhasznaloNev == textBox2.Text && deserializalt[i].email == textBox3.Text)
                     {
 
                         pictureBox1.Image = Bitmap.FromFile(files[accountok[i].getIndex(indexSzamlalo)]);
@@ -406,13 +416,7 @@ namespace zaro
 
         private void button9_Click(object sender, EventArgs e)
         {
-            var path = @"felhasznalok.json";
-            string elolvasott = "[" + File.ReadAllText(path) + "]";
-            Rootobject[] accokDes = JsonConvert.DeserializeObject<Rootobject[]>(elolvasott);
-            foreach(Rootobject a in accokDes)
-            {
-                textBox1.AppendText(a.felhasznaloNev+"\r\n");
-            }
+           
             
         }
 
