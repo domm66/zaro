@@ -31,6 +31,7 @@ namespace zaro
         bool ujfelhasznalo = false;
         bool meglevofelhasznalo;
         int meglevofelhindex;
+        bool kattintott = false;
 
         int indexSzamlalo=0;
         int kepszamlalo = 0;
@@ -56,6 +57,14 @@ namespace zaro
             textBox1.AppendText("\r\n" + "X: " + mousePosX.ToString() + " Y: " + mousePosY.ToString() + "\r\n");
             felhJelszava += mousePosX.ToString() + mousePosY.ToString();
             textBox1.AppendText(felhJelszava + "\r\n");
+            if (kepszamlalo == 3)
+            {
+                button4.Enabled = false;
+            } else if (kepszamlalo<3)
+            {
+                button4.Enabled = true;
+            }
+            
             //kepszamlalo++;
             //pictureBox1.Enabled = false;
         }
@@ -80,7 +89,7 @@ namespace zaro
                 if (!letezik) {
                     accountok[szamlalo].jelszo = felhJelszava;
                     textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
-                    jsonstring = JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
+                    jsonstring = ","+JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
                     File.AppendAllText("felhasznalok.json", jsonstring);
                     GombokAlap();
                     Reset();
@@ -167,6 +176,14 @@ namespace zaro
         private void button4_Click(object sender, EventArgs e)
         {
             kepszamlalo++;
+            button4.Enabled = false;
+            if (kattintott)
+            {
+                button4.Enabled = false;
+            } else
+            {
+                kattintott = true;
+            }
             if (ujfelhasznalo)
             {
                 var szam = rand.Next(files.Length);
@@ -342,7 +359,7 @@ namespace zaro
                 textBox1.AppendText("Most adjon meg egy jelszót a: " + accountok[szamlalo].getNev().ToString() + " felhasználóhoz" + "\r\n");
                 pictureBox1.Visible = true;
                 button8.Visible = false;
-                button4.Enabled = true;
+                //button4.Enabled = true;
 
                 var szam = rand.Next(files.Length);
                 currentpicIndex = szam;
@@ -376,7 +393,7 @@ namespace zaro
                         
                         meglevofelhindex = i;
                         //felhJelszava = null;
-                        button4.Enabled = true;
+                        //button4.Enabled = true;
                         pictureBox1.Enabled = true;
                         break;
                     }
@@ -389,10 +406,24 @@ namespace zaro
 
         private void button9_Click(object sender, EventArgs e)
         {
-            var path = @"C:\Users\This dude\source\repos\zaro\zaro\felhasznalok.json";
-            string elolvasott = File.ReadAllText(path);
-            felhasznalo fasz2 = JsonConvert.DeserializeObject<felhasznalo>(elolvasott);
-            textBox1.Text = fasz2.jelszoKepIndexek[1].ToString();
+            var path = @"felhasznalok.json";
+            string elolvasott = "[" + File.ReadAllText(path) + "]";
+            Rootobject[] accokDes = JsonConvert.DeserializeObject<Rootobject[]>(elolvasott);
+            foreach(Rootobject a in accokDes)
+            {
+                textBox1.AppendText(a.felhasznaloNev+"\r\n");
+            }
+            
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

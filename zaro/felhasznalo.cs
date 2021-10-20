@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 namespace zaro
 {
     class felhasznalo
-    {
-
-        
+    {   
         public string felhasznaloNev { get; set; }
         public string jelszo { get; set; }
         public string email { get; set; }
