@@ -19,8 +19,8 @@ namespace zaro
         int mousePosY; //magassag
  
         int szamlalo=0;
-        //felhasznalo[] accountok = new felhasznalo[999999];
-        List<felhasznalo> accountok = new List<felhasznalo>();
+        felhasznalo[] accountok = new felhasznalo[999999];
+        //List<felhasznalo> accountok = new List<felhasznalo>();
         String felhJelszava;
         int currentpicIndex;
         String currentpic;
@@ -46,8 +46,9 @@ namespace zaro
         public Form1()
         {
             InitializeComponent();
+            Deserialize();
             //var fasz = JsonConvert.DeserializeObject<dynamic>("felhasznalok.json");
-            
+            textBox1.AppendText(deserializalt.Length.ToString());
             GombokAlap();
             
         }
@@ -77,35 +78,54 @@ namespace zaro
             ujfelhasznalo = false;
 
             if (kepszamlalo==3 && felhJelszava.Length >= 6 || felhJelszava != null) {
-                if (szamlalo > 0)
+                if (deserializalt.Length > 0)
                 {
-                    for (int i = 0; i < szamlalo; i++)
+                    for (int i = 0; i < deserializalt.Length; i++)
                     {
-                        if (accountok[i].getNev() == accountok[szamlalo].getNev())
+                        if (deserializalt[i].felhasznaloNev == textBox2.Text)
                         {
                             letezik = true;
-                            szamlalo--;
+                            //szamlalo--;
                         }
                     }
                 }
                 if (!letezik) {
-                    accountok[szamlalo].jelszo = felhJelszava;
-                    textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
-                    jsonstring = ","+JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
-                    File.AppendAllText("felhasznalok.json", jsonstring);
-                    GombokAlap();
-                    Reset();
-                    MessageBox.Show("Sikeres jelszó regisztráció!");
+                    if(deserializalt.Length>0)
+                    {
+                        accountok[szamlalo].jelszo = felhJelszava;
+                        textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
+                        jsonstring = "," + JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
+                        File.AppendAllText("felhasznalok.json", jsonstring);
+                        GombokAlap();
+                        Reset();
+                        MessageBox.Show("Sikeres jelszó regisztráció!");
+                        szamlalo++;
+
+                    } else
+                    {
+                        accountok[szamlalo].jelszo = felhJelszava;
+                        textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
+                        jsonstring = JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
+                        File.AppendAllText("felhasznalok.json", jsonstring);
+                        GombokAlap();
+                        Reset();
+                        MessageBox.Show("Sikeres jelszó regisztráció!");
+                        szamlalo++;
+
+                    }
+                    
                 } else 
                 {
                     MessageBox.Show("Ilyen felhasználónév már létezik!");
+                    Reset();
+                    GombokAlap();
                 }
-                szamlalo++;
+                
             } else
             {
                 MessageBox.Show("Adj meg egy megfelelő hosszúságú jelszót először!");
             }
-            Deserialize();
+           
             label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
         }
 
@@ -150,7 +170,12 @@ namespace zaro
             button4.Enabled = false;
             pictureBox1.Visible = false;
             Regisztracio();
-
+            Deserialize();
+            textBox1.AppendText(deserializalt[2].jelszoKepIndexek[0].ToString());
+            foreach(var indexek in deserializalt[2].jelszoKepIndexek )
+            {
+                textBox1.AppendText(indexek.ToString());
+            }
             //textBox1.AppendText("jelszo:" + accountok[szamlalo - 1].getJelszo().ToString());
         }
 
@@ -215,7 +240,6 @@ namespace zaro
                 }
                 else
                 {
-                    
                     currentpicIndex = szam;
                     currentpic = files[szam];
                     textBox1.AppendText(currentpicIndex.ToString() + "\r\n");
@@ -245,8 +269,8 @@ namespace zaro
             {
                 pictureBox1.Enabled = true;
                 indexSzamlalo++;
-                pictureBox1.Image = Bitmap.FromFile(files[accountok[meglevofelhindex].getIndex(indexSzamlalo)]);
-                textBox1.AppendText(accountok[meglevofelhindex].getIndex(indexSzamlalo).ToString() + "    " + indexSzamlalo + "\r\n");
+                pictureBox1.Image = Bitmap.FromFile(files[deserializalt[meglevofelhindex].jelszoKepIndexek[indexSzamlalo]]);
+                textBox1.AppendText(deserializalt[meglevofelhindex].jelszoKepIndexek[indexSzamlalo].ToString() + "    " + indexSzamlalo + "\r\n");
                 //felhJelszava += mousePosX.ToString() + mousePosY.ToString();
                 //textBox1.AppendText(felhJelszava);
                 label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
@@ -293,6 +317,8 @@ namespace zaro
 
         private void button6_Click(object sender, EventArgs e)
         {
+            Deserialize();
+            textBox1.AppendText(deserializalt.Length.ToString());
             UjFelhasznalo();
         }
 
@@ -346,6 +372,8 @@ namespace zaro
 
         private void button7_Click(object sender, EventArgs e)
         {
+            Deserialize();
+            textBox1.AppendText(deserializalt.Length.ToString());
             Meglevofelhasznalo();
         }
 
@@ -355,9 +383,9 @@ namespace zaro
 
             if (ujfelhasznalo)
             {
-                //accountok[szamlalo] = new felhasznalo();
+               // accountok[szamlalo] = new felhasznalo();
 
-                accountok.Add(new felhasznalo
+                accountok[szamlalo] = (new felhasznalo
                 {
                   felhasznaloNev = textBox2.Text,
                   email = textBox3.Text,
@@ -366,7 +394,7 @@ namespace zaro
                 //accountok[szamlalo].felhasznaloNev = textBox2.Text;
                 //accountok[szamlalo].email = textBox3.Text;
                 
-                textBox1.AppendText("Most adjon meg egy jelszót a: " + accountok[szamlalo].getNev().ToString() + " felhasználóhoz" + "\r\n");
+                textBox1.AppendText("Most adjon meg egy jelszót a: " + textBox2.Text + " felhasználóhoz" + "\r\n");
                 pictureBox1.Visible = true;
                 button8.Visible = false;
                 //button4.Enabled = true;
@@ -391,12 +419,12 @@ namespace zaro
             else if(meglevofelhasznalo)
             {
                 pictureBox1.Visible = true;
-                for (int i = 0; i < szamlalo; i++)
+                for (int i = 0; i < deserializalt.Length; i++)
                 {
                     if (deserializalt[i].felhasznaloNev == textBox2.Text && deserializalt[i].email == textBox3.Text)
                     {
-
-                        pictureBox1.Image = Bitmap.FromFile(files[accountok[i].getIndex(indexSzamlalo)]);
+                        label7.Text = "";
+                        pictureBox1.Image = Bitmap.FromFile(files[deserializalt[i].jelszoKepIndexek[indexSzamlalo]]);
                         //indexSzamlalo++;
                         kepszamlalo++;
                         MessageBox.Show("Felhasználó megtalálva, most adja meg a jelszavát!");
@@ -406,7 +434,7 @@ namespace zaro
                         //button4.Enabled = true;
                         pictureBox1.Enabled = true;
                         break;
-                    }
+                    } else { label7.Text = "Rossz felhasználó vagy jelszó!"; }
                 }
                 //kepszamlalo = 0;
                 label6.Text = "Maradék kép: " + (3 - kepszamlalo).ToString();
