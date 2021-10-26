@@ -47,7 +47,7 @@ namespace zaro
         {
             InitializeComponent();
             Deserialize();
-            //var fasz = JsonConvert.DeserializeObject<dynamic>("felhasznalok.json");
+           
             textBox1.AppendText(deserializalt.Length.ToString());
             GombokAlap();
             
