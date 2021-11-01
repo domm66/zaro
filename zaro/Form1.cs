@@ -40,6 +40,7 @@ namespace zaro
 
         String jsonstring;
         Rootobject[] deserializalt;
+        bool letezik = false;
 
 
 
@@ -50,7 +51,6 @@ namespace zaro
             //var fasz = JsonConvert.DeserializeObject<dynamic>("felhasznalok.json");
             textBox1.AppendText(deserializalt.Length.ToString());
             GombokAlap();
-            
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -66,29 +66,18 @@ namespace zaro
             } else if (kepszamlalo<3)
             {
                 button4.Enabled = true;
-            }
-            
+            } 
             //kepszamlalo++;
             //pictureBox1.Enabled = false;
         }
 
         public void Regisztracio() {
             
-            bool letezik=false;
+            
             ujfelhasznalo = false;
 
             if (kepszamlalo==3 && felhJelszava.Length >= 6 || felhJelszava != null) {
-                if (deserializalt.Length > 0)
-                {
-                    for (int i = 0; i < deserializalt.Length; i++)
-                    {
-                        if (deserializalt[i].felhasznaloNev == textBox2.Text)
-                        {
-                            letezik = true;
-                            //szamlalo--;
-                        }
-                    }
-                }
+                
                 if (!letezik) {
                     if(deserializalt.Length>0)
                     {
@@ -308,6 +297,7 @@ namespace zaro
                 ujfelhasznalo = false;
                 meglevofelhasznalo = false;
                 pictureBox1.Image = null;
+                letezik = false;
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -381,9 +371,30 @@ namespace zaro
         {
             felhJelszava = null;
 
+            if (deserializalt.Length > 0 && ujfelhasznalo)
+            {
+                for (int i = 0; i < deserializalt.Length; i++)
+                {
+                    if (deserializalt[i].felhasznaloNev == textBox2.Text)
+                    {
+                        //letezik = true;
+                        MessageBox.Show("Ilyen felhasználó már létezik!");
+                        GombokAlap();
+                        Reset();
+                        //szamlalo--;
+                    }
+                }
+            }
+
+
             if (ujfelhasznalo)
             {
-               // accountok[szamlalo] = new felhasznalo();
+
+
+               
+
+
+                // accountok[szamlalo] = new felhasznalo();
 
                 accountok[szamlalo] = (new felhasznalo
                 {
@@ -442,20 +453,6 @@ namespace zaro
             
         }
 
-        private void button9_Click(object sender, EventArgs e)
-        {
-           
-            
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }
