@@ -66,7 +66,8 @@ namespace zaro
             } else if (kepszamlalo<3)
             {
                 button4.Enabled = true;
-            } 
+            }
+            pictureBox1.Enabled = false;
             //kepszamlalo++;
             //pictureBox1.Enabled = false;
         }
@@ -201,6 +202,7 @@ namespace zaro
         {
             kepszamlalo++;
             button4.Enabled = false;
+            pictureBox1.Enabled = true;
             if (kattintott)
             {
                 button4.Enabled = false;
@@ -370,7 +372,7 @@ namespace zaro
         private void button8_Click(object sender, EventArgs e)
         {
             felhJelszava = null;
-
+            button8.Visible = false;
             if (deserializalt.Length > 0 && ujfelhasznalo)
             {
                 for (int i = 0; i < deserializalt.Length; i++)
