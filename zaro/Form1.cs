@@ -15,6 +15,8 @@ namespace zaro
 {
     public partial class Form1 : Form
     {
+       
+
         int mousePosX; //szelesseg
         int mousePosY; //magassag
  
@@ -27,7 +29,7 @@ namespace zaro
         int lastpicIndex;
         String lastpic;
         Random rand = new Random();
-        String[] files = Directory.GetFiles(@"pics");
+        String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"/pics");
         bool ujfelhasznalo = false;
         bool meglevofelhasznalo;
         int meglevofelhindex;
@@ -42,7 +44,7 @@ namespace zaro
         Rootobject[] deserializalt;
         bool letezik = false;
 
-
+       
 
         public Form1()
         {
@@ -85,7 +87,7 @@ namespace zaro
                         accountok[szamlalo].jelszo = felhJelszava;
                         textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
                         jsonstring = "," + JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
-                        File.AppendAllText("felhasznalok.json", jsonstring);
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"/felhasznalok.json", jsonstring);
                         GombokAlap();
                         Reset();
                         MessageBox.Show("Sikeres jelszó regisztráció!");
@@ -96,7 +98,7 @@ namespace zaro
                         accountok[szamlalo].jelszo = felhJelszava;
                         textBox1.AppendText("Sikeres mentés!" + "\r\n" + accountok[szamlalo].getNev() + " " + accountok[szamlalo].getEmail() + " " + accountok[szamlalo].getJelszo() + "\r\n");
                         jsonstring = JsonConvert.SerializeObject(accountok[szamlalo], Formatting.Indented);
-                        File.AppendAllText("felhasznalok.json", jsonstring);
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"/felhasznalok.json", jsonstring);
                         GombokAlap();
                         Reset();
                         MessageBox.Show("Sikeres jelszó regisztráció!");
@@ -137,7 +139,7 @@ namespace zaro
 
         public void Deserialize()
         {
-            var path = @"felhasznalok.json";
+            var path = Directory.GetCurrentDirectory() + @"/felhasznalok.json";
             string elolvasott = "[" + File.ReadAllText(path) + "]";
             deserializalt = JsonConvert.DeserializeObject<Rootobject[]>(elolvasott);
             
